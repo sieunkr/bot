@@ -1,75 +1,57 @@
 package eddy.bot.broker;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class AirProvider implements AirDetails {
 
+    @Value("${weather.api.url}")
+    private String weatherApiUrl;
 
-
+    private ConcurrentHashMap<String,AirDto> airHashMap = new ConcurrentHashMap<>();
 
     @Override
     public void fetch() {
 
-
-
-
-        /*
-        MultiValueMap params = new LinkedMultiValueMap<>();
-        params.put("serviceKey","fvfQ6YjRGHPX9zvbZNtlNjdFaFkG%2F%2FHT%2BZ%2BCUQH18dVOOJTOIqD4duXdTd4QJ3pY31VKL%2FXOUcDpG5S%2FSxqBaQ%3D%3D");
-        params.put("numOfRows","10");
-        params.put("pageNo","1");
-        params.put("sidoName","서울");
-        params.put("searchCondition","HOUR");
-        */
-
         try {
-            URI requestUri = new URI("http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst?serviceKey=&numOfRows=10&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&searchCondition=HOUR");
+            URI requestUri = new URI(weatherApiUrl);
 
+            //TODO:Bean 주입으로 변경
             WebClient webClient = WebClient.create();
 
             webClient.get().uri(requestUri)
                     .retrieve()
                     .bodyToMono(Air.class)
-                    .subscribe(a -> {
-                        System.out.println("테스트");
-                    });
-
+                    .subscribe(this::update);
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        /*
-        URI uri = UriComponentsBuilder.fromHttpUrl("http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst")
-                .queryParam("serviceKey","fvfQ6YjRGHPX9zvbZNtlNjdFaFkG%2F%2FHT%2BZ%2BCUQH18dVOOJTOIqD4duXdTd4QJ3pY31VKL%2FXOUcDpG5S%2FSxqBaQ%3D%3D")
-                .queryParam("numOfRows","10")
-                .queryParam("pageNo","1")
-                .queryParam("sidoName","서울")
-                .queryParam("searchCondition","HOUR")
-                .build().toUri();
-        */
-
-
-
-
-
-
-        /*
-        this.webClient.get().uri(uri.toUri())
-                .retrieve()
-                .bodyToMono(Air.class)
-                .subscribe(a -> {
-                    System.out.println("테스트");
-                });
-        */
-
     }
+
+
+    @Override
+    public void update(Air air) {
+        air.getBody().getItems().forEach(
+                item -> airHashMap.put(item.getStationName(), new AirDto(item.getStationName(),item.getPm10Grade())));
+    }
+
+    @Override
+    public Flux<AirDto> findAll() {
+        return Flux.fromIterable(airHashMap.values());
+    }
+
+    @Override
+    public Mono<AirDto> findByStationName(String stationName) {
+        return Mono.just(airHashMap.get(stationName));
+    }
+
+
 }
