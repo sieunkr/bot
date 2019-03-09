@@ -1,4 +1,4 @@
-package eddy.bot.broker;
+package eddy.bot.broker.core;
 
 import org.springframework.stereotype.Service;
 

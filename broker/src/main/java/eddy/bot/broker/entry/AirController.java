@@ -1,5 +1,7 @@
-package eddy.bot.broker;
+package eddy.bot.broker.entry;
 
+import eddy.bot.broker.core.AirDetails;
+import eddy.bot.broker.core.Content;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +21,12 @@ public class AirController {
     }
 
     @GetMapping
-    public Flux<AirDto> findAll(){
+    public Flux<Content> findAll(){
         return airDetails.findAll();
     }
 
     @GetMapping("{stationName}")
-    public Mono<AirDto> findByStationName(@PathVariable(name = "stationName") String stationName){
+    public Mono<Content> findByStationName(@PathVariable(name = "stationName") String stationName){
         return airDetails.findByStationName(stationName);
     }
 
