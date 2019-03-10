@@ -1,16 +1,20 @@
 package eddy.bot.telegram.entry;
 
 import com.vdurmont.emoji.EmojiParser;
+import eddy.bot.telegram.core.Content;
 import eddy.bot.telegram.provider.ContentProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 
@@ -39,7 +43,7 @@ public class TelegramMessageListener {
         //TODO:Bean 으로...
         ApiContextInitializer.init();
         TelegramBotsApi api = new TelegramBotsApi();
-
+        
         try {
             api.registerBot(new TelegramLongPollingBot() {
 
@@ -52,18 +56,26 @@ public class TelegramMessageListener {
                         SendMessage message = new SendMessage()
                                 .enableHtml(true);
 
-                        contentProvider.searchByKeyword(stringMessage).subscribe(content -> {
-                            contentProvider.template(content).subscribe(s -> {
-                                message.setChatId(update.getMessage().getChatId())
-                                        .setText(EmojiParser.parseToUnicode(s));
+                        contentProvider.searchByKeyword(stringMessage)
+                                .switchIfEmpty(
+                                        Mono.create(monoSink -> {
+                                                    Content content = new Content("not-found","not-found", null, null,"");
+                                                    monoSink.success(content);
+                                                }
+                                        )
+                                )
+                                .subscribe(content -> {
+                                    contentProvider.template(content).subscribe(s -> {
+                                        message.setChatId(update.getMessage().getChatId())
+                                                .setText(EmojiParser.parseToUnicode(s));
 
-                                try {
-                                    execute(message);
-                                } catch (TelegramApiException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        });
+                                        try {
+                                            execute(message);
+                                        } catch (TelegramApiException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                                });
                     }
                 }
 
