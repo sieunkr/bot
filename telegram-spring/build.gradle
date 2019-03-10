@@ -17,13 +17,34 @@ configurations {
 
 repositories {
     mavenCentral()
+    //maven { url 'https://repo.spring.io/milestone' }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.telegram:telegrambots:4.1.2'
+/*
+ext {
+    set('springCloudVersion', 'Greenwich.RELEASE')
+}
+*/
 
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit:2.1.2.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    implementation 'org.telegram:telegrambots:4.1.2'
+    implementation 'com.googlecode.concurrent-trees:concurrent-trees:2.6.1'
+    implementation 'com.samskivert:jmustache:1.14'
+    implementation 'com.vdurmont:emoji-java:4.0.0'
+
+    
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+/*
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+*/
