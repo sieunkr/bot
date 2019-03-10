@@ -18,12 +18,14 @@ public class Content {
     //추후에 Auto increment ID 로 개선하는게 좋지 않을까?
     @Indexed
     private String name;
+    private String categoryId;
     private LinkedHashMap<String,Object> data;
     private List<String> keywords;
     private String description;
 
-    public Content(String name, LinkedHashMap<String,Object> data, List<String> keywords, String description){
+    public Content(String name, String categoryId, LinkedHashMap<String,Object> data, List<String> keywords, String description){
         this.name = name;
+        this.categoryId = categoryId;
         this.data = data;
         this.keywords = keywords;
         this.description = description;
