@@ -20,8 +20,11 @@ public class AirProvider implements AirDetails {
 
     private final ContentRepository contentRepository;
 
-    public AirProvider(ContentRepository contentRepository) {
+    private final MessageComponent messageComponent;
+
+    public AirProvider(ContentRepository contentRepository, MessageComponent messageComponent) {
         this.contentRepository = contentRepository;
+        this.messageComponent = messageComponent;
     }
 
 
@@ -96,6 +99,7 @@ public class AirProvider implements AirDetails {
                                     contentRepository.save(newOrUpdatedAir).subscribe();
 
                                     //TODO: Telegram Bot 으로 메시지 전송
+                                    messageComponent.sendMessagePojo(new UpdateInfo(newOrUpdatedAir.getName()));
                                 },
                                 null,
                                 null
