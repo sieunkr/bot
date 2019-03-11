@@ -97,8 +97,6 @@ public class AirProvider implements AirDetails {
                         )
                         .subscribe(newOrUpdatedAir -> {
                                     contentRepository.save(newOrUpdatedAir).subscribe();
-
-                                    //TODO: Telegram Bot 으로 메시지 전송
                                     messageComponent.sendMessagePojo(new UpdateInfo(newOrUpdatedAir.getName()));
                                 },
                                 null,
