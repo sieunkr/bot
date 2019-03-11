@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static eddy.bot.broker.core.AirUtils.*;
+
 @Component
 public class AirProvider implements AirDetails {
 
@@ -69,15 +71,16 @@ public class AirProvider implements AirDetails {
                 data.put("pm25Value", item.getPm25Value());
                 data.put("pm25Value24", item.getPm25Value24());
                 data.put("khaiValue", item.getKhaiValue());
-                data.put("khaiGrade", item.getKhaiGrade());
-                data.put("so2Grade", item.getSo2Grade());
-                data.put("coGrade", item.getCoGrade());
-                data.put("o3Grade", item.getO3Grade());
-                data.put("no2Grade", item.getNo2Grade());
-                data.put("pm10Grade", item.getPm10Grade());
-                data.put("pm25Grade", item.getPm25Grade());
-                data.put("pm10Grade1h", item.getPm10Grade1h());
-                data.put("pm25Grade1h", item.getPm25Grade1h());
+
+                data.put("khaiGrade", getTextGrade(item.getKhaiGrade()));
+                data.put("so2Grade", getTextGrade(item.getSo2Grade()));
+                data.put("coGrade", getTextGrade(item.getCoGrade()));
+                data.put("o3Grade", getTextGrade(item.getO3Grade()));
+                data.put("no2Grade", getTextGrade(item.getNo2Grade()));
+                data.put("pm10Grade", getTextGrade(item.getPm10Grade()));
+                data.put("pm25Grade", getTextGrade(item.getPm25Grade()));
+                data.put("pm10Grade1h", getTextGrade(item.getPm10Grade1h()));
+                data.put("pm25Grade1h", getTextGrade(item.getPm25Grade1h()));
 
 
                 //TODO:ContentProvider 분리
