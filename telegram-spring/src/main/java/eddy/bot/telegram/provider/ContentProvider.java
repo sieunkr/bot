@@ -30,10 +30,10 @@ public class ContentProvider implements ContentDetails {
 
     @Override
     public Mono<Content> searchByKeyword(String keyword) {
-
+    
         //TODO: 중복 코드
-        if(keywordRepository.getKeywords().getValueForExactKey(keyword) != null){
-            return findByName(keywordRepository.getKeywords().getValueForExactKey(keyword));
+        if(keywordRepository.getKeywords().getValueForExactKey(keyword.replaceAll(" ", "")) != null){
+            return findByName(keywordRepository.getKeywords().getValueForExactKey(keyword.replaceAll(" ", "")));
         }
         else{
             return Mono.empty();
@@ -46,7 +46,7 @@ public class ContentProvider implements ContentDetails {
 
         findByName(name).subscribe(content -> {
                     content.getKeywords().forEach(keyword->{
-                        keywordRepository.getKeywords().put(keyword, content.getName());
+                        keywordRepository.getKeywords().put(keyword.replaceAll(" ", ""), content.getName());
                     });
                 },
                 null,
