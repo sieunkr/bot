@@ -43,7 +43,7 @@ public class TelegramMessageListener {
         //TODO:Bean 으로...
         ApiContextInitializer.init();
         TelegramBotsApi api = new TelegramBotsApi();
-        
+
         try {
             api.registerBot(new TelegramLongPollingBot() {
 
@@ -55,6 +55,9 @@ public class TelegramMessageListener {
                         String stringMessage = update.getMessage().getText();
                         SendMessage message = new SendMessage()
                                 .enableHtml(true);
+
+                        //메시지 전송 권한, / 가 포함되어야 Bot 서버에서 메시지를 받을 수 있음
+                        stringMessage = stringMessage.replace("/","");
 
                         contentProvider.searchByKeyword(stringMessage)
                                 .switchIfEmpty(
