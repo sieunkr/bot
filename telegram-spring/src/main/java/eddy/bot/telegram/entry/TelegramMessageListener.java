@@ -45,56 +45,60 @@ public class TelegramMessageListener {
         TelegramBotsApi api = new TelegramBotsApi();
 
         try {
-            api.registerBot(new TelegramLongPollingBot() {
-
-                @Override
-                public void onUpdateReceived(Update update) {
-                    if (update.hasMessage() && update.getMessage().hasText()) {
-
-                        //TODO:컴포넌트 및 메서드 분리
-                        String stringMessage = update.getMessage().getText();
-                        SendMessage message = new SendMessage()
-                                .enableHtml(true);
-
-                        //메시지 전송 권한, / 가 포함되어야 Bot 서버에서 메시지를 받을 수 있음
-                        stringMessage = stringMessage.replace("/","");
-
-                        contentProvider.searchByKeyword(stringMessage)
-                                .switchIfEmpty(
-                                        Mono.create(monoSink -> {
-                                                    Content content = new Content("not-found","not-found", null, null,"");
-                                                    monoSink.success(content);
-                                                }
-                                        )
-                                )
-                                .subscribe(content -> {
-                                    contentProvider.template(content).subscribe(s -> {
-                                        message.setChatId(update.getMessage().getChatId())
-                                                .setText(EmojiParser.parseToUnicode(s));
-
-                                        try {
-                                            execute(message);
-                                        } catch (TelegramApiException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
-                                });
-                    }
-                }
-
-                @Override
-                public String getBotUsername() {
-                    return telegramBotName;
-                }
-
-                @Override
-                public String getBotToken() {
-                    return telegramBotKey;
-                }
-
-            });
+            api.registerBot(new SimpleTelegramLongPollingBot());
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
     }
+
+    //TODO:provider 패키지로 이동 가능한지?
+    class SimpleTelegramLongPollingBot extends TelegramLongPollingBot{
+
+        @Override
+        public void onUpdateReceived(Update update) {
+            if (update.hasMessage() && update.getMessage().hasText()) {
+
+                //TODO:컴포넌트 및 메서드 분리
+                String stringMessage = update.getMessage().getText();
+                SendMessage message = new SendMessage()
+                        .enableHtml(true);
+
+                //메시지 전송 권한, / 가 포함되어야 Bot 서버에서 메시지를 받을 수 있음
+                stringMessage = stringMessage.replace("/","");
+
+                contentProvider.searchByKeyword(stringMessage)
+                        .switchIfEmpty(
+                                Mono.create(monoSink -> {
+                                            Content content = new Content("not-found","not-found", null, null,"");
+                                            monoSink.success(content);
+                                        }
+                                )
+                        )
+                        .subscribe(content -> {
+                            contentProvider.template(content).subscribe(s -> {
+                                message.setChatId(update.getMessage().getChatId())
+                                        .setText(EmojiParser.parseToUnicode(s));
+
+                                try {
+                                    execute(message);
+                                } catch (TelegramApiException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        });
+            }
+        }
+
+        @Override
+        public String getBotUsername() {
+            return telegramBotName;
+        }
+
+        @Override
+        public String getBotToken() {
+            return telegramBotKey;
+        }
+
+    }
+
 }
