@@ -9,7 +9,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-
+/**
+* @author Eddy Kim
+*
+*/
 @XmlRootElement(name = "response")
 public class Air {
 

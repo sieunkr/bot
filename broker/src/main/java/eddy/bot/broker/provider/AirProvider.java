@@ -14,6 +14,10 @@ import java.util.List;
 
 import static eddy.bot.broker.core.AirUtils.*;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Component
 public class AirProvider implements AirDetails {
 
@@ -58,6 +62,7 @@ public class AirProvider implements AirDetails {
 
                 //TODO:키워드 생성 메서드 분리, 관리툴 연동
                 List<String> keywords = Arrays.asList(item.getStationName() + " " + "미세먼지");
+
 
                 LinkedHashMap<String, Object> data = new LinkedHashMap<>();
                 data.put("stationName", item.getStationName());

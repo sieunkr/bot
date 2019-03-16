@@ -5,6 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Document(collection = "categories")
 @Data
 public class Category {

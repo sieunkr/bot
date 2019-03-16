@@ -3,7 +3,10 @@ package eddy.bot.broker.core;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+/**
+ * @author Eddy Kim
+ *
+ */
 public interface AirDetails {
 
     void fetch();

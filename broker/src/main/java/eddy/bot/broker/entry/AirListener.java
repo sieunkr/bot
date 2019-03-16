@@ -2,6 +2,10 @@ package eddy.bot.broker.entry;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Component
 public class AirListener {
 

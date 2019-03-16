@@ -8,6 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Document(collection = "contents")
 @Data
 public class Content {

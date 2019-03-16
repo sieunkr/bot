@@ -5,6 +5,10 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Service
 @EnableBinding(ContentSource.class)
 public class MessageComponent {

@@ -1,10 +1,14 @@
 package eddy.bot.broker.core;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 public class AirUtils {
 
     public static String getTextGrade(String grade){
         String result;
-        
+
         switch(grade){
             case "1" :
                 result = "좋음 :heart_eyes: ";

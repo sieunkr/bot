@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @Data
 public class UpdateInfo implements Serializable {
     private static final long serialVersionUID = 2L;

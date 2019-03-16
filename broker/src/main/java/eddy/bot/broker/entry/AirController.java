@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * @author Eddy Kim
+ *
+ */
 @RestController
 @RequestMapping("/airs")
 public class AirController {
@@ -18,7 +22,7 @@ public class AirController {
     public AirController(AirUseCase airUseCase) {
         this.airUseCase = airUseCase;
     }
-    
+
     @GetMapping
     public Flux<Content> findAll(){
         return airUseCase.findAll();
