@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface ContentRepository extends ReactiveMongoRepository<Content, Integer> {
     Mono<Content> findByName(String name);
+    Mono<Content> deleteByName(String name);
 }
